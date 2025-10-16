@@ -12,17 +12,17 @@ import os
 # Add current directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from lib.backend.qrng_core import QuantumRNG
-from lib.backend.qrng_visualization import QRNGVisualizer
+from qrng_core import QuantumRNG  # CHANGED: removed lib.backend.
+from qrng_visualization import QRNGVisualizer  # CHANGED: removed lib.backend.
 
-app = Flask(__name__)
-CORS(app)
+application = Flask(__name__)  # CHANGED: app -> application
+CORS(application)
 
 # Initialize components
 qrng = QuantumRNG()
 visualizer = QRNGVisualizer()
 
-@app.route('/')
+@application.route('/')  # CHANGED: @app -> @application
 def home():
     return jsonify({
         'message': 'Quantum Random Number Generator API',
@@ -34,7 +34,7 @@ def home():
         }
     })
 
-@app.route('/api/generate/<method>', methods=['POST'])
+@application.route('/api/generate/<method>', methods=['POST'])  # CHANGED
 def generate_random_numbers(method):
     try:
         data = request.get_json() or {}
@@ -91,7 +91,7 @@ def generate_random_numbers(method):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/benchmark', methods=['POST'])
+@application.route('/api/benchmark', methods=['POST'])  # CHANGED
 def run_benchmark():
     try:
         data = request.get_json() or {}
@@ -116,7 +116,7 @@ def run_benchmark():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/methods', methods=['GET'])
+@application.route('/api/methods', methods=['GET'])  # CHANGED
 def get_methods():
     methods = {
         'hadamard': {
@@ -145,4 +145,4 @@ def get_methods():
 if __name__ == '__main__':
     print("Starting Quantum RNG API Server...")
     print("Available at: http://localhost:5000")
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    application.run(debug=True, port=5000, host='0.0.0.0')  # CHANGED: app -> application
